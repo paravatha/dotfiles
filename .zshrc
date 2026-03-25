@@ -5,7 +5,7 @@ venv_setup(){
     source .venv/bin/activate
   else
     echo ".venv does not exist, creating.."
-    uv venv .venv -p python3.12  && source .venv/bin/activate
+    uv venv .venv -p python3.13  && source .venv/bin/activate
     echo ".venv activated"
   fi
 }
@@ -20,7 +20,7 @@ alias ws="cd ~/git-ws"
 
 ## python alias
 alias venv="venv_setup "
-alias dvenv="source deactivate"
+alias dvenv="deactivate"
 
 ## git alias
 alias gs="git status"
@@ -31,13 +31,12 @@ alias gco="git checkout "
 alias gad='git add --all &&  gc -S -m "update for dev" && gps'
 
 ## az alias
-alias adev="az login && az account set --subscription ""
-alias aprd="az login && az account set --subscription ""
+alias adev='az login && az account set --subscription "YOUR_SUBSCRIPTION_ID"'
 
 ## kubectl alias
 alias k=kubectl
 autoload -U +X compinit && compinit
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+command -v kubectl >/dev/null 2>&1 && source <(kubectl completion zsh)
 alias kdev="az aks get-credentials --resource-group  --name  --subscription  && kubectl config use-context  && kubeon "
 alias kprd="az aks get-credentials --resource-group --name  --subscription  &&  kubectl config use-context && kubeon "
 alias kns="kubectl config set-context --current --namespace "
@@ -143,7 +142,10 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-PROMPT='$(kube_ps1)'$PROMPT
+
+# enable prompt substitution so $(kube_ps1) expands inside PROMPT
+setopt PROMPT_SUBST
+PROMPT='$(kube_ps1)'"$PROMPT"
 kubeoff
 
 # User configuration

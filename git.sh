@@ -41,16 +41,29 @@ Host github.com
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_ed25519
 
-  pbcopy < ~/.ssh/id_ed25519.pub
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Add the copied key to GitHub under Settings > SSH and GPG keys > New SSH key
 
 ###### GPG setup ######
 
+brew install gnupg
 gpg --version
-
 echo "test" | gpg --clearsign
-
-gpg --list-secret-keys --keyid-format=long
 
 brew install pinentry-mac
 echo "pinentry-program $(which pinentry-mac)" >> ~/.gnupg/gpg-agent.conf
 killall gpg-agent
+
+
+gpg --list-secret-keys --keyid-format=long
+gpg --full-generate-key
+
+gpg --list-secret-keys --keyid-format=long
+
+gpg --armor --export <KEY_ID>
+
+# Add the output to GitHub under Settings > SSH and GPG keys > New GPG key
+
+git config --global user.name "paravatha"
+git config --global user.email "prasad.paravatha@gmail.com"
