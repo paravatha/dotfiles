@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 ###### pre-commit ######
 
 uv pip install pre-commit
@@ -33,7 +36,10 @@ git fetch
 git tag -l | xargs -n 1 git push --delete origin
 
 ###### ssh key ######
-ssh-keygen -t ed25519 -C "prasad.paravatha@gmail.com"
+export EMAIL="example@gmail.com" 
+export USERNAME="example"
+
+ssh-keygen -t ed25519 -C "$EMAIL"
 eval "$(ssh-agent -s)"
 touch ~/.ssh/config
 
@@ -53,7 +59,7 @@ echo "test" | gpg --clearsign
 
 brew install pinentry-mac
 echo "pinentry-program $(which pinentry-mac)" >> ~/.gnupg/gpg-agent.conf
-killall gpg-agent
+killall gpg-agent || true  # Ignore if gpg-agent not running
 
 
 gpg --list-secret-keys --keyid-format=long
@@ -61,9 +67,10 @@ gpg --full-generate-key
 
 gpg --list-secret-keys --keyid-format=long
 
-gpg --armor --export <KEY_ID>
+# Replace KEY_ID with the long format key ID from the list above
+gpg --armor --export KEY_ID
 
 # Add the output to GitHub under Settings > SSH and GPG keys > New GPG key
 
-git config --global user.name "paravatha"
-git config --global user.email "prasad.paravatha@gmail.com"
+git config --global user.name "$USERNAME"
+git config --global user.email "$EMAIL"

@@ -1,8 +1,14 @@
+#!/bin/bash
+set -e
+
 brew upgrade helm
+
+export NAMESPACE="keda"
+kubectl create namespace "$NAMESPACE"
 
 helm repo add kedacore https://kedacore.github.io/charts
 helm repo update
-helm install keda kedacore/keda --namespace keda --create-namespace
+helm install keda kedacore/keda --namespace "$NAMESPACE" --create-namespace
 
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
@@ -24,7 +30,7 @@ helm install "$AIRFLOW_NAME" airflow-stable/airflow --namespace "$AIRFLOW_NAMESP
 
 helm upgrade "$AIRFLOW_NAME" airflow-stable/airflow --namespace "$AIRFLOW_NAMESPACE" --version "8.9.0" --set airflow.image.tag=2.9.2-python3.9 --set dags.persistence.enabled=True --set dags.persistence.accessMode=ReadWriteMany --set extraPipPackages="apache-airflow-providers-databricks==6.6.0"
 
-helm uninstall "$AIRFLOW_NAME" --namespace "$AIRFLOW_NAME"
+helm uninstall "$AIRFLOW_NAME" --namespace "$AIRFLOW_NAMESPACE"
 
 airflow scheduler
 

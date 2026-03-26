@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # 1. Install Homebrew if not present
 if ! command -v brew &> /dev/null; then
@@ -51,7 +52,9 @@ code --install-extension ms-azuretools.vscode-docker
 # 5. Initialize uv shell completion
 
 echo "Setting up uv..."
-echo 'eval "$(uv generate-shell-completion zsh)"' >> ~/.zshrc
+if ! grep -q 'uv generate-shell-completion' ~/.zshrc; then
+    echo 'eval "$(uv generate-shell-completion zsh)"' >> ~/.zshrc
+fi
 
 # 6 Oh My Zsh Installation
 if [ ! -d "$HOME/.oh-my-zsh" ]; then

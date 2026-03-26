@@ -1,6 +1,12 @@
+#!/bin/bash
+set -e
+
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
+export PYTHON_VERSION=3.13
 
-docker build -t python3-test .
+# Use the official slim Python image
+docker pull python:${PYTHON_VERSION}-slim
+docker tag python:${PYTHON_VERSION}-slim python${PYTHON_VERSION}-test
 
-docker run --name pytest -d python3-test sleep infinity
+docker run --name pytest -d python${PYTHON_VERSION}-test sleep infinity
 

@@ -52,6 +52,7 @@ alias kranch="kubectl config use-context rancher-desktop && kubeon "
 ## terraform
 alias tf=terraform
 alias tfinit="terraform init"
+alias tfvalidate="terraform validate"
 alias tfp="terraform plan"
 alias tfa="terraform apply -auto-approve"
 alias tfdt="terraform destroy -auto-approve" 
